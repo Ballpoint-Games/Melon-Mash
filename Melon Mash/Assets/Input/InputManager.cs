@@ -23,7 +23,7 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""ecbb6738-9744-499c-9181-078e62c6a30f"",
                     ""expectedControlType"": ""Dpad"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""interactions"": """"
                 },
                 {

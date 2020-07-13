@@ -2260,7 +2260,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3608af60b5e1e4790a26538e1c749f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunningSpeed: 3.5
+  RunningAccelerationTime: 0.1
+  RunningDecelerationTime: 0.05
+  MaxRunningSpeed: 3.5
+  MaxSkateboardSpeed: 10
   MovementMode: 0
   JumpHeight: 3
   GravityScale: 1

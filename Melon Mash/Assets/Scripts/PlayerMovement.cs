@@ -10,10 +10,18 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController2D m_Controller;
     private Vector2 m_Velocity;
 
+    private float m_RunningAcceleration, m_RunningDeceleration;
+    private float m_SkateboardingAcceleration, m_SkateboardingDeceleration;
+
     private float m_JumpVelocity;
 
     [Header("Movement Options")]
-    public float RunningSpeed = 3.5f;
+    [Min(0.0001f)] public float RunningAccelerationTime = 0.1f;
+    [Min(0.0001f)] public float RunningDecelerationTime = 0.05f;
+    [Min(0.0001f)] public float MaxRunningSpeed = 3.5f;
+    [Min(0.0001f)] public float SkateboardingAccelerationTime = 1.1f;
+    [Min(0.0001f)] public float SkateboardingDecelerationTime = 0.8f;
+    [Min(0.0001f)] public float MaxSkateboardingSpeed = 10.0f;
     public PlayerMovementMode MovementMode = PlayerMovementMode.Running;
 
     [Space]
@@ -41,6 +49,12 @@ public class PlayerMovement : MonoBehaviour
         m_Controller = GetComponent<CharacterController2D>();
         m_Velocity = m_Controller.velocity;
 
+        m_RunningAcceleration = MaxRunningSpeed / RunningAccelerationTime;
+        m_RunningDeceleration = MaxRunningSpeed / RunningDecelerationTime;
+
+        m_SkateboardingAcceleration = MaxSkateboardingSpeed / SkateboardingAccelerationTime;
+        m_SkateboardingDeceleration = MaxSkateboardingSpeed / SkateboardingDecelerationTime;
+
         m_JumpVelocity = Mathf.Sqrt(Mathf.Abs(Physics2D.gravity.y * GravityScale * JumpHeight * 2));
     }
 
@@ -61,9 +75,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
 
             case PlayerMovementMode.Skateboarding:
-                //TODO Implement Skateboarding
-                Debug.LogWarning("Skateboarding is not implemented yet!");
-                MovementMode = PlayerMovementMode.Running;
+                Skateboard();
                 break;
         }
 
@@ -80,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
                 gravity *= LowJumpMultiplier;
         }
 
-        m_Velocity += Physics2D.gravity * Time.deltaTime * gravity;
+        m_Velocity.y += Physics2D.gravity.y * Time.deltaTime * gravity;
         m_Controller.Move(m_Velocity * Time.deltaTime);
     }
 
@@ -91,7 +103,40 @@ public class PlayerMovement : MonoBehaviour
 
     private void Run()
     {
-        m_Velocity.x = (m_Movement.x != 0 ? Mathf.Sign(m_Movement.x) : 0.0f) * RunningSpeed;
+        float movement = m_Movement.x != 0.0f ? Mathf.Sign(m_Movement.x) : 0.0f;
+
+        if (movement != 0.0f && Mathf.Abs(m_Velocity.x) < MaxRunningSpeed)
+            m_Velocity.x += m_RunningAcceleration * Time.deltaTime * movement;
+        else
+        {
+            if (m_Velocity.x > m_RunningDeceleration * Time.deltaTime)
+                m_Velocity.x -= m_RunningDeceleration * Time.deltaTime;
+            else if (m_Velocity.x < -m_RunningDeceleration * Time.deltaTime)
+                m_Velocity.x += m_RunningDeceleration * Time.deltaTime;
+            else
+                m_Velocity.x = 0.0f;
+        }
+
+        Mathf.Clamp(m_Velocity.x, -MaxRunningSpeed, MaxRunningSpeed);
+    }
+
+    private void Skateboard()
+    {
+        float movement = m_Movement.x != 0.0f ? Mathf.Sign(m_Movement.x) : 0.0f;
+
+        if (movement != 0.0f && Mathf.Abs(m_Velocity.x) < MaxSkateboardingSpeed)
+            m_Velocity.x += m_SkateboardingAcceleration * Time.deltaTime * movement;
+        else
+        {
+            if (m_Velocity.x > m_SkateboardingDeceleration * Time.deltaTime)
+                m_Velocity.x -= m_SkateboardingDeceleration * Time.deltaTime;
+            else if (m_Velocity.x < -m_SkateboardingDeceleration * Time.deltaTime)
+                m_Velocity.x += m_SkateboardingDeceleration * Time.deltaTime;
+            else
+                m_Velocity.x = 0.0f;
+        }
+
+        Mathf.Clamp(m_Velocity.x, -MaxSkateboardingSpeed, MaxSkateboardingSpeed);
     }
 
     private void OnEnable()
