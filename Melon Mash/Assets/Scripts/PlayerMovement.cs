@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private InputManager m_Input;
     private Vector2 m_Movement;
     private bool m_Jump, m_JumpLast;
+    private bool m_Switch;
 
     private CharacterController2D m_Controller;
     private Vector2 m_Velocity;
@@ -46,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
         m_Input.Player.Jump.started += ctx => m_Jump = ctx.ReadValueAsButton();
         m_Input.Player.Jump.canceled += ctx => m_Jump = false;
 
+        m_Input.Player.Switch.started += ctx => m_Switch = true;
+
         m_Controller = GetComponent<CharacterController2D>();
         m_Velocity = m_Controller.velocity;
 
@@ -71,10 +74,22 @@ public class PlayerMovement : MonoBehaviour
         switch (MovementMode)
         {
             case PlayerMovementMode.Running:
+                if (m_Switch)
+                {
+                    MovementMode = PlayerMovementMode.Skateboarding;
+                    break;
+                }
+
                 Run();
                 break;
 
             case PlayerMovementMode.Skateboarding:
+                if (m_Switch)
+                {
+                    MovementMode = PlayerMovementMode.Running;
+                    break;
+                }
+
                 Skateboard();
                 break;
         }
@@ -91,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
             else if (m_Velocity.y > 0 && !m_Jump)
                 gravity *= LowJumpMultiplier;
         }
-
+        
         m_Velocity.y += Physics2D.gravity.y * Time.deltaTime * gravity;
         m_Controller.Move(m_Velocity * Time.deltaTime);
     }
@@ -99,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
     private void LateUpdate()
     {
         m_JumpLast = m_Jump;
+        m_Switch = false;
     }
 
     private void Run()
