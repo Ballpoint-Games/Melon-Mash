@@ -22,7 +22,7 @@ public class @InputManager : IInputActionCollection, IDisposable
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""ecbb6738-9744-499c-9181-078e62c6a30f"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Dpad"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
