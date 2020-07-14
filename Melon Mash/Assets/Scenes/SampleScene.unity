@@ -2296,6 +2296,7 @@ GameObject:
   - component: {fileID: 1193831777}
   - component: {fileID: 1193831776}
   - component: {fileID: 1193831775}
+  - component: {fileID: 1193831779}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2382,7 +2383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RunningAccelerationTime: 0.1
   RunningDecelerationTime: 0.05
-  MaxRunningSpeed: 3.5
+  MaxRunningSpeed: 5
   SkateboardingAccelerationTime: 1.1
   SkateboardingDecelerationTime: 0.8
   MaxSkateboardingSpeed: 10
@@ -2498,6 +2499,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1193831779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193831772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d38fe0c719ba44385be9ad9f37b453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 1060529818711801979, guid: 2cac7f7159b71e34a86baac60988fe98, type: 3}
+  MaxBullets: 3
 --- !u!1 &1311151947
 GameObject:
   m_ObjectHideFlags: 0

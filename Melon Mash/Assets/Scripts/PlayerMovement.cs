@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController2D m_Controller;
     private Vector2 m_Velocity;
 
+    private SpriteRenderer m_Renderer;
+
     private float m_RunningAcceleration, m_RunningDeceleration;
     private float m_SkateboardingAcceleration, m_SkateboardingDeceleration;
 
@@ -51,6 +53,8 @@ public class PlayerMovement : MonoBehaviour
 
         m_Controller = GetComponent<CharacterController2D>();
         m_Velocity = m_Controller.velocity;
+
+        m_Renderer = GetComponent<SpriteRenderer>();
 
         m_RunningAcceleration = MaxRunningSpeed / RunningAccelerationTime;
         m_RunningDeceleration = MaxRunningSpeed / RunningDecelerationTime;
@@ -109,6 +113,11 @@ public class PlayerMovement : MonoBehaviour
         
         m_Velocity.y += Physics2D.gravity.y * Time.deltaTime * gravity;
         m_Controller.Move(m_Velocity * Time.deltaTime);
+
+        if (m_Velocity.x > 0)
+            m_Renderer.flipX = false;
+        else if (m_Velocity.x < 0)
+            m_Renderer.flipX = true;
     }
 
     private void LateUpdate()
