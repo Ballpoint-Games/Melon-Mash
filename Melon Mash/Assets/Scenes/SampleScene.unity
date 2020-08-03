@@ -4911,6 +4911,8 @@ MonoBehaviour:
   MaxSkateboardingSpeed: 10
   MovementMode: 0
   JumpHeight: 3.5
+  CoyoteTime: 0.1
+  JumpTime: 0.1
   GravityScale: 1
   LowJumpMultiplier: 4
   FallMultiplier: 3

@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private float m_SkateboardingAcceleration, m_SkateboardingDeceleration;
 
     private float m_JumpVelocity;
+    private float m_TimeSinceLastGround, m_LastJumpTime;
 
     [Header("Movement Options")]
     [Min(0.0001f)] public float RunningAccelerationTime = 0.1f;
@@ -31,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jumping Options")]
     public float JumpHeight = 3.0f;
+    public float CoyoteTime = 0.1f;
+    public float JumpTime = 0.1f;
 
     [Space]
 
@@ -63,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
         m_SkateboardingDeceleration = MaxSkateboardingSpeed / SkateboardingDecelerationTime;
 
         m_JumpVelocity = Mathf.Sqrt(Mathf.Abs(Physics2D.gravity.y * GravityScale * JumpHeight * 2));
+        m_TimeSinceLastGround = CoyoteTime;
+        m_LastJumpTime = JumpTime;
     }
 
     private void Update()
@@ -98,10 +103,15 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
+        if (m_Jump && !m_JumpLast)
+            m_LastJumpTime = 0.0f;
+        else
+            m_LastJumpTime += Time.deltaTime;
+
         if (m_Controller.isGrounded)
         {
-            if (m_Jump && !m_JumpLast) m_Velocity.y = m_JumpVelocity;
-            else m_Velocity.y = 0.0f;
+            m_TimeSinceLastGround = 0.0f;
+            m_Velocity.y = 0.0f;
         }
         else
         {
@@ -109,8 +119,13 @@ public class PlayerMovement : MonoBehaviour
                 gravity *= FallMultiplier;
             else if (m_Velocity.y > 0 && !m_Jump)
                 gravity *= LowJumpMultiplier;
+
+            m_TimeSinceLastGround += Time.deltaTime;
         }
-        
+
+        if (m_LastJumpTime <= JumpTime && m_TimeSinceLastGround <= CoyoteTime)
+            m_Velocity.y = m_JumpVelocity;
+
         m_Velocity.y += Physics2D.gravity.y * Time.deltaTime * gravity;
         m_Controller.Move(m_Velocity * Time.deltaTime);
 
