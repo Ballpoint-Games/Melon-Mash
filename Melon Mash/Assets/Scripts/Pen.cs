@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Pen : MonoBehaviour
 {
     //Used to flip the sprite
     private SpriteRenderer m_Renderer;
 
-    [Tooltip("The lifetime in seconds of this bullet")] public float Lifetime = 3.0f;
-    [Tooltip("How fast this bullet moves")] public float velocity = 10.0f;
+    [Tooltip("The lifetime in seconds of this pen")] public float Lifetime = 3.0f;
+    [Tooltip("How fast this pen moves")] public float velocity = 10.0f;
 
     private void Awake()
     {

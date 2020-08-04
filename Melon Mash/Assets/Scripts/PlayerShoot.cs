@@ -6,11 +6,11 @@ public class PlayerShoot : MonoBehaviour
     //Input variables
     private InputManager m_Input;
 
-    //The current list of bullets
-    private List<GameObject> m_Bullets;
+    //The current list of pens
+    private List<GameObject> m_Pens;
 
-    [Tooltip("The default bullet sprite")] public GameObject BulletPrefab;
-    [Tooltip("The maximum number of bullets"), Min(0)] public int MaxBullets = 3;
+    [Tooltip("The pen")] public GameObject PenPrefab;
+    [Tooltip("The maximum number of pens"), Min(0)] public int MaxPens = 3;
 
     private void Awake()
     {
@@ -20,32 +20,33 @@ public class PlayerShoot : MonoBehaviour
         //Setup shooting variable
         m_Input.Player.Shoot.started += ctx => Shoot();
 
-        //Create a new list of bullets
-        m_Bullets = new List<GameObject>(MaxBullets);
+        //Create a new list of pens
+        m_Pens = new List<GameObject>(MaxPens);
     }
 
     private void Update()
     {
-        //Remove destroyed bullets
-        for (int i = m_Bullets.Count - 1; i >= 0; i--)
+        //Remove destroyed pens
+        for (int i = m_Pens.Count - 1; i >= 0; i--)
         {
-            if (m_Bullets[i] == null)
-                m_Bullets.RemoveAt(i);
+            if (m_Pens[i] == null)
+                m_Pens.RemoveAt(i);
         }
     }
 
     private void Shoot()
     {
-        //Spawn a new bullet if possible
-        if (m_Bullets.Count < MaxBullets)
+        //Spawn a new pen if possible
+        if (m_Pens.Count < MaxPens)
         {
-            GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
-            bullet.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
-            m_Bullets.Add(bullet);
+            GameObject pen = Instantiate(PenPrefab, transform.position, Quaternion.identity);
+            pen.name = PenPrefab.name + " " + m_Pens.Count;
+            pen.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+            m_Pens.Add(pen);
         }
     }
 
-    //Enable and disable movement
+    //Enable and disable input
     private void OnEnable()
     {
         m_Input.Enable();
